@@ -1,0 +1,6 @@
+Flask
+numpy
+scipy
+matplotlib
+pandas
+Werkzeug

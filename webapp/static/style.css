@@ -1,0 +1,378 @@
+/* General body and layout styles */
+body {
+    font-family: sans-serif;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex; /* Use flexbox for full height layout */
+    flex-direction: column; /* Stack header, content, footer */
+    min-height: 100vh; /* Ensure body takes full viewport height */
+}
+
+/* Wrapper for the main content (excluding full-width header/footer) */
+.page-wrapper {
+    width: 100%;
+    max-width: 1600px; /* Max width for the main content area */
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0 auto; /* Center the page-wrapper */
+    flex-grow: 1; /* Allows this element to grow and push footer down */
+}
+
+/* Main title container styling (similar to qualitative page) */
+.main-title-container {
+    background-color: #ffffff; /* White background for the title box */
+    border: 1px solid #d1d5da; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px 20px;
+    margin-bottom: 25px; /* Space below the title box */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    justify-content: space-between; /* Space out title and info items */
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Gap between title group and info items */
+}
+
+.h1-title-group {
+    display: flex;
+    flex-direction: column; /* Stack title and copyright */
+    align-items: flex-start; /* Align to the left */
+    flex-grow: 1; /* Allow title group to take available space */
+}
+
+.h1-title {
+    font-size: 1.8em; /* Adjust as needed */
+    color: #1f2328; /* Darker text for main title */
+    margin: 0;
+    font-weight: 600;
+}
+
+.h1-copyright {
+    font-size: 0.8em;
+    color: #586069; /* Secondary text color */
+    margin-top: 4px;
+}
+.h1-copyright a {
+    color: #0056b3;
+    text-decoration: none;
+}
+.h1-copyright a:hover {
+    text-decoration: underline;
+}
+
+.h1-info {
+    display: flex;
+    gap: 15px; /* Gap between info items */
+    align-items: center;
+    flex-wrap: wrap; /* Allow info items to wrap */
+}
+
+.info-item {
+    text-align: center;
+    min-width: 70px; /* Minimum width for each item */
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75em;
+    color: #586069;
+    margin-bottom: 3px;
+}
+
+.info-content a {
+    color: #0056b3; /* Link color */
+    text-decoration: none;
+    font-size: 1.2em; /* Icon size */
+    padding: 5px;
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+.info-content a:hover {
+    color: #003d80; /* Darker link color on hover */
+}
+.info-content a i {
+    vertical-align: middle;
+}
+
+
+/* Main container for controls and plots */
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 20px;
+    width: 100%;
+}
+
+/* Controls panel */
+.controls {
+    flex: 1 1 340px; /* Flex properties for responsive width */
+    min-width: 300px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: fit-content; /* Adjust height to content */
+}
+
+/* Plots area */
+.plots {
+    flex: 2 1 400px; /* Plots take more space */
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Styling for sections within the controls panel */
+.parameter-section {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.parameter-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.0em;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Styling for groups of controls */
+.control-group {
+    margin-bottom: 15px;
+}
+.control-group.hidden {
+    display: none; /* For toggling visibility */
+}
+
+/* Labels for form inputs */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+/* Input fields and select elements */
+input[type=number], input[type=text], input[type=file], select {
+    width: calc(100% - 12px); /* Full width minus padding */
+    padding: 8px 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+input[type=file] {
+    padding: 5px; /* Specific padding for file input */
+}
+input[type=number]:focus, input[type=text]:focus, input[type=file]:focus, select:focus {
+     border-color: #007bff; /* Highlight on focus */
+     outline: none;
+}
+
+/* Style for disabled input fields */
+input:disabled {
+    background-color: #e9ecef; /* Lighter background for disabled */
+    cursor: not-allowed; /* Indicate non-interactive state */
+    opacity: 0.7; /* Slightly faded look */
+}
+
+
+/* Radio button groups */
+.radio-group label {
+    font-weight: normal;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 0.9em;
+}
+.radio-group input[type=radio] {
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* Submit button */
+button[type="submit"] { /* More specific selector */
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Plot containers */
+.plot-container {
+    border: 1px solid #ddd;
+    min-height: 200px;
+    background-color: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #999;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.plot-container .plot-title {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+}
+
+.plot-container img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Initially hidden by JS, shown when src is set */
+}
+
+.plot-container .placeholder-text {
+    font-style: italic;
+}
+
+/* Error message styling */
+#error-message {
+    color: #dc3545;
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    display: none; /* Shown by JS */
+    word-break: break-word;
+}
+
+/* Global loading indicator (below the button) */
+#loading-indicator {
+    display: none; /* Shown by JS */
+    margin: 15px 0 5px 0;
+    text-align: center;
+    color: #555;
+    font-style: italic;
+}
+
+/* Metadata display area */
+#metadata-display {
+     margin-top: 20px;
+     padding: 12px;
+     background-color: #e9ecef;
+     border: 1px solid #ced4da;
+     border-radius: 4px;
+     font-size: 0.9em;
+     line-height: 1.5;
+     display: none; /* Shown by JS */
+     word-break: break-word;
+}
+ #metadata-display strong {
+      color: #343a40;
+ }
+
+/* Headings */
+/* h1 is now handled by .main-title-container styles */
+h2 { /* Section titles like "Parameters", "Results" */
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    font-size: 1.2em;
+    color: #0056b3;
+    margin-bottom: 20px;
+}
+
+/* Small text utility */
+small {
+     display: block;
+     margin-top: 4px;
+     font-size: 0.8em;
+     color: #6c757d;
+}
+
+/* Styles to ensure fetched header and footer are full-width */
+#header-placeholder > header,
+#footer-placeholder > footer {
+    width: 100% !important;      
+    max-width: none !important;   
+    margin-left: 0 !important;    
+    margin-right: 0 !important;   
+    box-sizing: border-box !important; 
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; 
+    }
+    .controls, .plots {
+        width: 100%; 
+        margin-bottom: 20px;
+    }
+    .plots {
+        margin-bottom: 0;
+    }
+    .main-title-container { /* Adjust title container for smaller screens */
+        flex-direction: column;
+        align-items: flex-start; /* Align all to left */
+    }
+    .h1-title-group {
+        margin-bottom: 10px; /* Space between title group and info items when stacked */
+    }
+    .h1-title {
+        font-size: 1.5em;
+    }
+    .h1-info {
+        width: 100%; /* Make info items take full width */
+        justify-content: space-around; /* Distribute info items */
+    }
+    h2 {
+        font-size: 1.1em;
+    }
+    .radio-group label {
+        display: block; 
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-wrapper {
+        padding: 10px; 
+    }
+    .controls {
+        padding: 15px;
+    }
+    input[type=number], input[type=text], input[type=file], select {
+        font-size: 0.9em;
+    }
+    button[type="submit"] {
+        font-size: 0.95em;
+    }
+    .h1-title {
+        font-size: 1.3em;
+    }
+    .info-item {
+        min-width: 50px; /* Slightly smaller min-width */
+    }
+    .info-label {
+        font-size: 0.7em;
+    }
+    .info-content a {
+        font-size: 1.1em;
+    }
+}
