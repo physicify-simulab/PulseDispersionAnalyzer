@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser Pulse Simulator - Introduction</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/physicify-simulab/physicify-simulab.github.io/refs/heads/main/favicon.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="intro_style.css">
+
+    <link rel="stylesheet" href="https://physicify-simulab.github.io/header.css">
+    <link rel="stylesheet" href="https://physicify-simulab.github.io/footer.css">
+
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="intro-container">
+
+        <h1>Welcome to the Laser Pulse Simulator</h1>
+
+        <div class="simulator-preview">
+            <img src="Screenshot.png" alt="Screenshot of the Laser Pulse Calculator">
+            <a href="/" class="play-link" title="Launch Quantitative Calculator">
+                <div class="play-button">
+                    <i class="fas fa-rocket"></i> </div>
+            </a>
+        </div>
+
+        <section class="info-section">
+            <p>
+                <span class="author-info">
+                    Original Author: <a href="https://github.com/Hussein-Tofaili" target="_blank">Hussein-Tofaili</a>
+                </span>
+                <span class="info-separator">|</span>
+                <span class="source-info">
+                    Source Code (Qualitative Sim): <a href="https://github.com/physicify-simulab/LaserPulseSimulator" target="_blank">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </span>
+            </p>
+        </section>
+
+        <div class="description" style="margin-top: 20px;">
+             <h2 style="text-align:left; border-bottom: 1px solid #eee; padding-bottom: 5px;">About the Quantitative Calculator</h2>
+            <p>
+                This page serves as an introduction. Clicking the launch button above will take you to the **Ultrashort Pulse Phase Calculator**, a quantitative tool, now available at the main page.
+            </p>
+            <p>
+                The quantitative calculator allows for precise analysis of ultrashort laser pulses by defining spectral properties (analytically or via file import) and observing the impact of spectral phase (GDD, TOD) on the temporal pulse shape, duration, and other characteristics.
+            </p>
+        </div>
+
+
+        <h2>Core Principles (Ultrashort Pulses)</h2>
+        <div class="description">
+            <p>
+                The behavior of an ultrashort pulse is fundamentally governed by the Fourier relationship between its temporal and spectral representations. The temporal electric field, $E(t)$, can be determined from its spectral counterpart, $E(\omega)$, which is characterized by a spectral amplitude $A(\omega)$ and a spectral phase $\Phi(\omega)$.
+            </p>
+            <p>
+                This calculator focuses on the impact of the spectral phase, which is often described by a Taylor series expansion around the central angular frequency $\omega_0$ (derived from the input central wavelength $\lambda_0$):
+            </p>
+            <p style="text-align:center; font-weight:bold; margin: 15px 0;">
+                $\Phi(\omega) = \phi_0 + \phi_1(\omega-\omega_0) + \frac{1}{2} \phi_2(\omega-\omega_0)^2 + \frac{1}{6} \phi_3(\omega-\omega_0)^3 + \dots$
+            </p>
+            <p>
+                The coefficients in this expansion have direct physical interpretations:
+            </p>
+            <ul>
+                <li>$\phi_0$: A constant phase offset.</li>
+                <li>$\phi_1$: The group delay, affecting the pulse's arrival time.</li>
+                <li>$\phi_2$: The Group Delay Dispersion (GDD), responsible for linear frequency chirp and temporal broadening or compression of the pulse.</li>
+                <li>$\phi_3$: The Third-Order Dispersion (TOD), which can introduce pulse asymmetry and satellite pulses.</li>
+            </ul>
+            <p>
+                By adjusting these coefficients, users can directly observe their effects on the pulse's temporal shape, duration, and other properties. The calculations involve Fast Fourier Transforms (FFT) to switch between the spectral and temporal domains.
+            </p>
+        </div>
+
+        <h2>Key Features Overview (Quantitative Calculator)</h2>
+        <div class="description">
+            <ul>
+                <li><strong>Flexible Spectrum Input:</strong> Gaussian, Sech², or imported data (CSV/TXT).</li>
+                <li><strong>Precise Phase Control:</strong> Adjust $\phi_0, \phi_1, \text{GDD}, \text{TOD}$.</li>
+                <li><strong>Comprehensive Outputs:</strong> Spectral, temporal, and autocorrelation plots.</li>
+                <li><strong>Quantitative Analysis:</strong> Calculates FWHM for pulse and autocorrelation.</li>
+                <li><strong>Simulation Grid Control:</strong> Adjustable FFT grid size and frequency window.</li>
+            </ul>
+            <p>For a detailed list of features and how to use them, please launch the calculator using the button above.</p>
+        </div>
+
+        <div class="comments-section">
+             <h2>Comments & Discussion</h2>
+             <p>Discussions for the <strong>Quantitative Pulse Calculator</strong> can be found on its GitHub repository, or you can leave comments here related to this introductory page.</p>
+            <script src="https://giscus.app/client.js"
+                data-repo="physicify-simulab/LaserPulseCalculator" data-repo-id="YOUR_REPO_ID_FOR_QUANTITATIVE_CALCULATOR" data-category="General" data-category-id="YOUR_CATEGORY_ID_FOR_THIS_PAGE" data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+            </script>
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        function includeHTML(elementId, filePath) {
+          fetch(filePath)
+            .then(response => {
+                if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+                return response.text();
+            })
+            .then(data => {
+              const element = document.getElementById(elementId);
+              if (element) { element.innerHTML = data; }
+              else { console.error(`Element with ID '${elementId}' not found.`); }
+            })
+            .catch(error => console.error('Error loading ' + filePath + ':', error));
+        }
+        includeHTML('header-placeholder', 'https://physicify-simulab.github.io/header.html');
+        includeHTML('footer-placeholder', 'https://physicify-simulab.github.io/footer.html');
+    </script>
+</body>
+</html>
