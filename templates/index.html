@@ -6,9 +6,7 @@
     <title>Ultrashort Pulse Phase Calculator</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/physicify-simulab/physicify-simulab.github.io/refs/heads/main/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
-    <link rel="stylesheet" href="/header.css">
-    <link rel="stylesheet" href="/footer.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../header.css') }}"> <link rel="stylesheet" href="{{ url_for('static', filename='../footer.css') }}"> <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -24,7 +22,7 @@
                 <div class="info-item">
                     <span class="info-label">About and discussion</span>
                     <div class="info-content">
-                        <a href="#" target="_blank" title="About and Discussion">
+                        <a href="{{ url_for('.intro_page') }}" title="About and Discussion">
                            <i class="fa-solid fa-file-invoice"></i>
                         </a>
                     </div>
@@ -32,7 +30,7 @@
                 <div class="info-item">
                     <span class="info-label">Source</span>
                     <div class="info-content">
-                        <a href="https://github.com/physicify-simulab/LaserPulseCalculator" target="_blank" title="View Source on GitHub"> <i class="fab fa-github"></i>
+                        <a href="https://github.com/physicify-simulab/PulseDispersionAnalyzer" target="_blank" title="View Source on GitHub"> <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>
@@ -76,7 +74,7 @@
                             <div class="control-group">
                                 <label for="spectrum_file">Spectrum File (CSV/TXT):</label>
                                 <input type="file" id="spectrum_file" name="spectrum_file" accept=".csv,.txt,.dat">
-                                <small>X: Wavelength, Y: Intensity. Backend converts Y to amplitude (sqrt(Y)).</small>
+                                <small>X: Wavelength (nm), Y: Intensity. Backend converts Y to amplitude (sqrt(Y)).</small>
                             </div>
                             <div class="control-group">
                                 <label for="delimiter">Delimiter:</label>
@@ -99,7 +97,7 @@
                             </div>
                             <div class="control-group">
                                 <label for="cropping_fwhm_multiplier">Cropping Window Size (N x FWHM):</label>
-                                <input type="number" id="cropping_fwhm_multiplier" name="cropping_fwhm_multiplier" value="4.0" step="0.1" min="1.0">
+                                <input type="number" id="cropping_fwhm_multiplier" name="cropping_fwhm_multiplier" value="{{ params.cropping_fwhm_multiplier }}" step="0.1" min="1.0">
                                 <small>Total width of data to keep, centered at peak, as multiple of FWHM (e.g., 4 = 4xFWHM).</small>
                             </div>
                              <small style="font-weight:bold; color: #d9534f;">Note: For imported files, λ₀ and Δλ are derived from the data; fields above are ignored.</small>
@@ -130,8 +128,8 @@
                         <h3>Simulation Grid</h3>
                         <div class="control-group">
                             <label for="N_exponent">Grid Size N (2^Exponent):</label>
-                            <input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" max="22" required>
-                            <small>FFT points. Higher = more detail, slower.</small>
+                            <input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" {% if not is_development_env %}max="22"{% else %}max="30"{% endif %} required>
+                            <small>FFT points. Higher = more detail, slower. {% if is_development_env %}(Local dev: higher max enabled){% else %}(Server max: 22){% endif %}</small>
                         </div>
                          <div class="control-group">
                             <label for="freq_window_factor">Frequency Window Factor:</label>
@@ -169,26 +167,30 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-        // Constants for DOM elements
+        // The script block is unchanged and should work correctly
         const form = document.getElementById('params-form');
         const spectralPlotImg = document.getElementById('spectral-plot-img');
         const timePlotImg = document.getElementById('time-plot-img');
         const autocorrPlotImg = document.getElementById('autocorr-plot-img');
-
         const spectralPlotContainer = document.getElementById('spectral-plot-container');
         const timePlotContainer = document.getElementById('time-plot-container');
         const autocorrPlotContainer = document.getElementById('autocorr-plot-container');
-
         const errorMessageDiv = document.getElementById('error-message');
         const loadingIndicator = document.getElementById('loading-indicator');
         const metadataDisplay = document.getElementById('metadata-display');
-
         const spectrumTypeRadios = document.querySelectorAll('input[name="spectrum_type"]');
         const analyticalSpectrumParamsDiv = document.getElementById('analytical-spectrum-params');
         const fileParamsDiv = document.getElementById('file-params');
         const lambda0Input = document.getElementById('lambda0_nm');
         const bandwidthInput = document.getElementById('bandwidth_nm');
         const fileInput = document.getElementById('spectrum_file');
+
+        // Determine the correct base URL for fetch requests
+        // This handles the /PulseDispersionAnalyzer prefix correctly.
+        const calculateUrl = "{{ url_for('.calculate') }}";
+        const headerUrl = "{{ url_for('static', filename='../header.html') }}";
+        const footerUrl = "{{ url_for('static', filename='../footer.html') }}";
+
 
         function setPlotPlaceholder(container, message) {
             const img = container.querySelector('img');
@@ -203,50 +205,54 @@
                 placeholder.style.display = 'block';
             }
         }
-
         function toggleSpectrumParams() {
             const selectedType = document.querySelector('input[name="spectrum_type"]:checked').value;
             const isAnalytical = selectedType === 'gaussian' || selectedType === 'sech2';
             const isFile = selectedType === 'file';
-
             analyticalSpectrumParamsDiv.classList.toggle('hidden', !isAnalytical);
             fileParamsDiv.classList.toggle('hidden', !isFile);
-
             lambda0Input.required = isAnalytical;
             lambda0Input.disabled = !isAnalytical;
-
             bandwidthInput.required = isAnalytical;
             bandwidthInput.disabled = !isAnalytical;
-
             fileInput.required = isFile;
         }
         spectrumTypeRadios.forEach(radio => radio.addEventListener('change', toggleSpectrumParams));
-        toggleSpectrumParams();
-
+        toggleSpectrumParams(); // Initial call to set visibility based on default checked radio
         function clearResultsAndSetLoading() {
             errorMessageDiv.style.display = 'none';
             errorMessageDiv.textContent = '';
             metadataDisplay.style.display = 'none';
             metadataDisplay.innerHTML = '';
-
             setPlotPlaceholder(spectralPlotContainer, 'Calculating... Please Wait');
             setPlotPlaceholder(timePlotContainer, 'Calculating... Please Wait');
             setPlotPlaceholder(autocorrPlotContainer, 'Calculating... Please Wait');
         }
-
         function setDefaultPlaceholders() {
             setPlotPlaceholder(spectralPlotContainer, 'Plot will appear here');
             setPlotPlaceholder(timePlotContainer, 'Plot will appear here');
             setPlotPlaceholder(autocorrPlotContainer, 'Plot will appear here');
         }
-
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             clearResultsAndSetLoading();
             loadingIndicator.style.display = 'block';
-
             const formData = new FormData(form);
             const spectrumType = formData.get('spectrum_type');
+
+            // Client-side validation for N_exponent (though server-side is the ultimate authority)
+            const nExponentInput = document.getElementById('N_exponent');
+            const nExponentValue = parseInt(nExponentInput.value, 10);
+            const nExponentMax = parseInt(nExponentInput.getAttribute('max'), 10); // Get current max from attribute
+            
+            if (nExponentValue > nExponentMax) {
+                 errorMessageDiv.textContent = `Error: N Exponent cannot exceed ${nExponentMax}.`;
+                 errorMessageDiv.style.display = 'block';
+                 loadingIndicator.style.display = 'none';
+                 setDefaultPlaceholders();
+                 return;
+            }
+
 
             if (spectrumType === 'file' && (!fileInput.files || fileInput.files.length === 0)) {
                 errorMessageDiv.textContent = 'Error: Please select a spectrum file.';
@@ -272,13 +278,12 @@
                     return;
                  }
             }
-
             try {
-                const response = await fetch('/calculate', { // This endpoint remains the same
+                // Use the dynamically generated calculateUrl
+                const response = await fetch(calculateUrl, {
                     method: 'POST',
                     body: formData
                 });
-
                 const contentType = response.headers.get("content-type");
                 if (!response.ok) {
                      let errorText = `Server error: ${response.status} ${response.statusText}`;
@@ -293,35 +298,28 @@
                           } else {
                               errorText += ` (Unexpected server response format)`;
                           }
-                     } catch (e) { /* Ignore parsing error */ }
+                     } catch (e) { /* Ignore parsing error if response is not JSON */ }
                      throw new Error(errorText);
                 }
-
                  if (!contentType || !contentType.includes("application/json")) {
                       throw new Error(`Received unexpected content type: ${contentType}. Expected JSON response.`);
                  }
-
                 const result = await response.json();
-
                 if (result.success) {
                     spectralPlotImg.src = result.plot_spec_img;
                     spectralPlotImg.alt = "Spectral Plot";
                     spectralPlotImg.style.display = 'block';
                     spectralPlotContainer.querySelector('.placeholder-text').style.display = 'none';
-
                     timePlotImg.src = result.plot_time_img;
                     timePlotImg.alt = "Time Domain Plot";
                     timePlotImg.style.display = 'block';
                     timePlotContainer.querySelector('.placeholder-text').style.display = 'none';
-
                     autocorrPlotImg.src = result.plot_ac_img;
                     autocorrPlotImg.alt = "Autocorrelation Plot";
                     autocorrPlotImg.style.display = 'block';
                     autocorrPlotContainer.querySelector('.placeholder-text').style.display = 'none';
-
                     const formatNum = (num, digits) => (num !== null && typeof num === 'number' && isFinite(num)) ? num.toFixed(digits) : 'N/A';
                     const nExponentVal = (result.N !== null && result.N > 0) ? Math.round(Math.log2(result.N)) : '?';
-
                     let metaHtml = `<strong>Parameters Used/Derived:</strong><br>
                                     Spectrum Source: ${result.spectrum_source || 'N/A'}<br>
                                     Effective λ₀ = ${formatNum(result.lambda0_nm, 2)} nm,
@@ -335,7 +333,6 @@
                     }
                     metaHtml += `Pulse FWHM (Intensity): ${formatNum(result.fwhm_fs, 2)} fs<br>`;
                     metaHtml += `Autocorrelation FWHM: ${formatNum(result.fwhm_ac, 2)} fs`;
-
                     metadataDisplay.innerHTML = metaHtml;
                     metadataDisplay.style.display = 'block';
                 } else {
@@ -343,7 +340,6 @@
                     errorMessageDiv.style.display = 'block';
                     setDefaultPlaceholders();
                 }
-
             } catch (error) {
                 errorMessageDiv.textContent = error.message || 'An unexpected error occurred. Check console for details.';
                 errorMessageDiv.style.display = 'block';
@@ -353,13 +349,11 @@
                  loadingIndicator.style.display = 'none';
             }
         });
-
         document.addEventListener('DOMContentLoaded', () => {
              setDefaultPlaceholders();
         });
-
         function includeHTML(elementId, filePath) {
-          fetch(filePath)
+          fetch(filePath) // Use the dynamically generated URLs
             .then(response => {
                 if (!response.ok) throw new Error(`Network response was not ok for ${filePath}: ${response.statusText}`);
                 return response.text();
@@ -374,9 +368,9 @@
             })
             .catch(error => console.error(`Error loading HTML from ${filePath}:`, error));
         }
-
-        includeHTML('header-placeholder', '/header.html');
-        includeHTML('footer-placeholder', '/footer.html');
+        // Use the dynamically generated URLs for header and footer
+        includeHTML('header-placeholder', headerUrl);
+        includeHTML('footer-placeholder', footerUrl);
       </script>
 </body>
 </html>
