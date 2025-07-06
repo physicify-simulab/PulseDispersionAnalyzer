@@ -35,6 +35,7 @@ DEFAULT_PARAMS = {
     "phi1": 0.0,
     "phi2": 0.0,
     "phi3": 0.0,
+    "phi4": 0.0, # Added fourth-order dispersion
     "N_exponent": 16,
     "freq_window_factor": 1000.0,
     "cropping_fwhm_multiplier": 4.0
@@ -242,6 +243,7 @@ def calculate():
             "phi1": form_data.get('phi1', DEFAULT_PARAMS['phi1'], type=float),
             "phi2": form_data.get('phi2', DEFAULT_PARAMS['phi2'], type=float),
             "phi3": form_data.get('phi3', DEFAULT_PARAMS['phi3'], type=float),
+            "phi4": form_data.get('phi4', DEFAULT_PARAMS['phi4'], type=float), # Added fourth-order
             "N_exponent": n_exponent, # Use the (potentially unlimited locally) n_exponent
             "freq_window_factor": form_data.get('freq_window_factor', DEFAULT_PARAMS['freq_window_factor'], type=float)
         }

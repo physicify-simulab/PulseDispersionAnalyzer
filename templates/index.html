@@ -111,7 +111,7 @@
                     <div class="parameter-section">
                         <h3>Spectral Phase</h3>
                         <small>The spectral phase \(\Phi(\omega)\) is Taylor expanded around the central angular frequency \(\omega_0\) (derived from \(\lambda_0\)):<br>
-                        $$\Phi(\omega) = \phi_0 + \phi_1 (\omega - \omega_0) + \frac{1}{2!} \phi_2 (\omega - \omega_0)^2 + \frac{1}{3!} \phi_3 (\omega - \omega_0)^3 + \dots$$
+                        $$\Phi(\omega) = \phi_0 + \phi_1 (\omega - \omega_0) + \frac{1}{2!} \phi_2 (\omega - \omega_0)^2 + \frac{1}{3!} \phi_3 (\omega - \omega_0)^3 + \frac{1}{4!} \phi_4 (\omega - \omega_0)^4 + \dots$$
                         </small>
                         <div class="control-group">
                             <label for="phi0">\(\phi_0\) (rad) - Carrier-Envelope Phase (CEP):</label>
@@ -128,6 +128,10 @@
                         <div class="control-group">
                             <label for="phi3">\(\phi_3\) (fs³) - Third-Order Dispersion (TOD):</label>
                             <input type="number" id="phi3" name="phi3" value="{{ params.phi3 }}" step="any" required>
+                        </div>
+                        <div class="control-group">
+                            <label for="phi4">\(\phi_4\) (fs⁴) - Fourth-Order Dispersion (FOD):</label>
+                            <input type="number" id="phi4" name="phi4" value="{{ params.phi4 }}" step="any" required>
                         </div>
                     </div>
 

@@ -88,7 +88,7 @@ def calculate_fwhm(x_axis, y_signal):
 
 
 # --- Main Calculation Function ---
-def calculate_pulse_properties(lambda0_nm, bandwidth_nm, phi0, phi1, phi2, phi3,
+def calculate_pulse_properties(lambda0_nm, bandwidth_nm, phi0, phi1, phi2, phi3, phi4,
                                N_exponent, freq_window_factor,
                                spectrum_shape='gaussian',
                                omega_custom_abs=None, E_omega_amp_custom=None,
@@ -171,10 +171,12 @@ def calculate_pulse_properties(lambda0_nm, bandwidth_nm, phi0, phi1, phi2, phi3,
             else:
                 raise ValueError(f"Unknown analytical spectrum_shape: {spectrum_shape}")
 
+    # Phase calculation including the new phi4 term
     phase_S_envelope = phi0 + \
                        omega_relative_for_definition * phi1 + \
                        0.5 * (omega_relative_for_definition**2) * phi2 + \
-                       (1.0/6.0) * (omega_relative_for_definition**3) * phi3
+                       (1.0/6.0) * (omega_relative_for_definition**3) * phi3 + \
+                       (1.0/24.0) * (omega_relative_for_definition**4) * phi4
 
     S_envelope_complex_centered = amplitude_S_envelope * np.exp(-1j * phase_S_envelope)
     S_envelope_complex_fft_ordered = np.fft.ifftshift(S_envelope_complex_centered)
@@ -347,10 +349,12 @@ def calculate_pulse_properties(lambda0_nm, bandwidth_nm, phi0, phi1, phi2, phi3,
 
 
     omega_plot_rel_for_phase_disp = omega_plot_axis_display_abs - omega0_rad_fs
+    # Phase calculation for plot including the new phi4 term
     phase_vs_lambda_plot = phi0 + \
                            omega_plot_rel_for_phase_disp * phi1 + \
                            0.5 * (omega_plot_rel_for_phase_disp**2) * phi2 + \
-                           (1.0/6.0) * (omega_plot_rel_for_phase_disp**3) * phi3
+                           (1.0/6.0) * (omega_plot_rel_for_phase_disp**3) * phi3 + \
+                           (1.0/24.0) * (omega_plot_rel_for_phase_disp**4) * phi4
     
     # Real part of the full complex electric field for plotting
     E_t_real_plot = np.real(E_t_complex)
