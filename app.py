@@ -31,7 +31,7 @@ DEFAULT_PARAMS = {
     "phi3": 0.0,
     "phi4": 0.0,
     "N_exponent": 16,
-    "freq_window_factor": 100.0,
+    "freq_window_factor": 1000.0,
     "cropping_fwhm_multiplier": 4.0
 }
 C_UM_FS = c * 1e6 / 1e15

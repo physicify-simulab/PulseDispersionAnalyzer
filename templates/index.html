@@ -165,12 +165,12 @@
                         <div class="control-group">
                             <label for="N_exponent">Grid Size N (2^Exponent):</label>
                             <input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" max="22" required>
-                            <small>FFT points. Higher = more detail, slower.</small>
+                            <small>FFT points. Use higher values for strongly chirped pulses.</small>
                         </div>
                          <div class="control-group">
                             <label for="freq_window_factor">Frequency Window Factor:</label>
                             <input type="number" id="freq_window_factor" name="freq_window_factor" value="{{ params.freq_window_factor }}" step="any" required>
-                            <small>Multiplier for spectral width (\(\Delta\omega\)) for FFT span.</small>
+                            <small>Multiplier for spectral width (\(\Delta\omega\)) for FFT span. Higher = finer time steps, but smaller time window. Might require higher N if time window became too small. </small>
                         </div>
                         <div class="control-group checkbox-group">
                             <label for="automatic_time_range">
