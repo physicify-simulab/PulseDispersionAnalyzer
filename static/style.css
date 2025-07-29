@@ -376,3 +376,166 @@ small {
         font-size: 1.1em;
     }
 }
+
+/* Info icon and tooltip styles */
+.info-icon {
+    display: inline-block;
+    margin-left: 5px;
+    color: #0056b3;
+    cursor: pointer;
+    position: relative;
+    font-size: 0.9em;
+    vertical-align: middle;
+}
+
+.info-icon:hover {
+    color: #003d80;
+}
+
+.info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    white-space: normal;
+    width: 250px;
+    max-width: calc(100vw - 40px);
+    text-align: left;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    pointer-events: none;
+    line-height: 1.4;
+    font-weight: normal;
+}
+
+/* Default positioning - above and centered */
+.info-icon:not([data-position])::after,
+.info-icon[data-position="top"]::after {
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+
+/* Position to the right */
+.info-icon[data-position="right"]::after {
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Position to the left */
+.info-icon[data-position="left"]::after {
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Position below */
+.info-icon[data-position="bottom"]::after {
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+}
+
+/* Arrow pointer - default top */
+.info-icon::before {
+    content: '';
+    position: absolute;
+    border: 5px solid transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.info-icon:not([data-position])::before,
+.info-icon[data-position="top"]::before {
+    left: 50%;
+    bottom: calc(100% + 3px);
+    transform: translateX(-50%);
+    border-top-color: #333;
+}
+
+/* Arrow for right position */
+.info-icon[data-position="right"]::before {
+    left: calc(100% + 3px);
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: #333;
+}
+
+/* Arrow for left position */
+.info-icon[data-position="left"]::before {
+    right: calc(100% + 3px);
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: #333;
+}
+
+/* Arrow for bottom position */
+.info-icon[data-position="bottom"]::before {
+    left: 50%;
+    top: calc(100% + 3px);
+    transform: translateX(-50%);
+    border-bottom-color: #333;
+}
+
+.info-icon:hover::after,
+.info-icon:hover::before,
+.info-icon.active::after,
+.info-icon.active::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Special styling for the file import notice */
+.info-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: #856404;
+    font-weight: bold;
+}
+
+.info-notice i {
+    color: #f39c12;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+/* Label styling adjustments for inline info icons */
+label {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .info-icon::after {
+        width: 220px;
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-icon::after {
+        width: min(200px, calc(100vw - 60px));
+        font-size: 0.75em;
+        padding: 6px 10px;
+    }
+}
+

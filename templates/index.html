@@ -84,8 +84,10 @@
                             <label><input type="radio" name="spectrum_type" value="gaussian" checked> Gaussian Spectrum</label>
                             <label><input type="radio" name="spectrum_type" value="sech2"> Sech² Spectrum</label>
                             <label><input type="radio" name="spectrum_type" value="file"> Import From File</label>
+                            <span class="info-icon" data-tooltip="For Gaussian/Sech², this defines the spectral intensity shape I(ω) in the angular frequency domain.">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
                         </div>
-                        <small>For Gaussian/Sech², this defines the spectral intensity shape \(I(\omega)\) in the angular frequency domain.</small>
 
                         <div id="analytical-spectrum-params">
                             <div class="control-group">
@@ -93,51 +95,80 @@
                                 <input type="number" id="lambda0_nm" name="lambda0_nm" value="{{ params.lambda0_nm }}" step="any">
                             </div>
                             <div class="control-group">
-                                <label for="bandwidth_nm">Bandwidth \(\Delta\lambda\) (nm, Intensity FWHM):</label>
+                                <label for="bandwidth_nm">
+                                    Bandwidth \(\Delta\lambda\) (nm, Intensity FWHM):
+                                    <span class="info-icon" data-tooltip="This is the FWHM of the intensity spectrum I(λ). For Gaussian/Sech² shapes, it's converted to the FWHM in angular frequency I(ω) for internal calculations.">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="number" id="bandwidth_nm" name="bandwidth_nm" value="{{ params.bandwidth_nm }}" step="any">
-                                <small>This is the FWHM of the intensity spectrum \(I(\lambda)\). For Gaussian/Sech² shapes, it's converted to the FWHM in angular frequency \(I(\omega)\) for internal calculations.</small>
                             </div>
                         </div>
 
                         <div id="file-params" class="control-group hidden">
                             <div class="control-group">
-                                <label for="spectrum_file">Spectrum File (CSV/TXT):</label>
+                                <label for="spectrum_file">
+                                    Spectrum File (CSV/TXT):
+                                    <span class="info-icon" data-tooltip="X: Wavelength (nm), Y: Intensity.">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="file" id="spectrum_file" name="spectrum_file" accept=".csv,.txt,.dat">
-                                <small>X: Wavelength (nm), Y: Intensity. Backend converts Y to amplitude (sqrt(Y)).</small>
                             </div>
                             <div class="control-group">
-                                <label for="delimiter">Delimiter:</label>
+                                <label for="delimiter">
+                                    Delimiter:
+                                    <span class="info-icon" data-tooltip='E.g., "," for CSV, "\s+" for space/tab.'>
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="text" id="delimiter" name="delimiter" value=",">
-                                <small>E.g., "," for CSV, "\s+" for space/tab.</small>
                             </div>
                             <div class="control-group">
                                 <label for="skip_rows">Skip Rows (Header):</label>
                                 <input type="number" id="skip_rows" name="skip_rows" value="0" step="1" min="0">
                             </div>
                             <div class="control-group">
-                                <label for="x_multiplier">X (Wavelength) Multiplier:</label>
+                                <label for="x_multiplier">
+                                    X (Wavelength) Multiplier:
+                                    <span class="info-icon" data-tooltip="X_input * multiplier. Ensures final wavelength is in nm.">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="number" id="x_multiplier" name="x_multiplier" value="1.0" step="any">
-                                <small>X_input * multiplier. Ensures final wavelength is in nm.</small>
                             </div>
                             <div class="control-group">
-                                <label for="x_exponent">X (Wavelength) Exponent:</label>
+                                <label for="x_exponent">
+                                    X (Wavelength) Exponent:
+                                    <span class="info-icon" data-tooltip="X_input^exponent. Ensures final wavelength is in nm.">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="number" id="x_exponent" name="x_exponent" value="1.0" step="any">
-                                <small>X_input<sup>exponent</sup>. Ensures final wavelength is in nm.</small>
                             </div>
                             <div class="control-group">
-                                <label for="cropping_fwhm_multiplier">Cropping Window Size (N x FWHM):</label>
+                                <label for="cropping_fwhm_multiplier">
+                                    Cropping Window Size (N x FWHM):
+                                    <span class="info-icon" data-tooltip="Total width of data to keep, centered at peak, as multiple of FWHM (e.g., 4 = 4xFWHM).">
+                                        <i class="fas fa-info-circle"></i>
+                                    </span>
+                                </label>
                                 <input type="number" id="cropping_fwhm_multiplier" name="cropping_fwhm_multiplier" value="{{ params.cropping_fwhm_multiplier }}" step="0.1" min="1.0">
-                                <small>Total width of data to keep, centered at peak, as multiple of FWHM (e.g., 4 = 4xFWHM).</small>
                             </div>
-                             <small style="font-weight:bold; color: #d9534f;">Note: For imported files, \(\lambda_0\) and \(\Delta\lambda\) are derived from the data; fields above are ignored.</small>
+                            <div class="info-notice">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Note: For imported files, λ₀ and Δλ are derived from the data; fields above are ignored.</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="parameter-section">
-                        <h3>Spectral Phase</h3>
-                        <small>The spectral phase \(\Phi(\omega)\) is Taylor expanded around the central angular frequency \(\omega_0\) (derived from \(\lambda_0\)):<br>
-                        $$\Phi(\omega) = \phi_0 + \phi_1 (\omega - \omega_0) + \frac{1}{2!} \phi_2 (\omega - \omega_0)^2 + \frac{1}{3!} \phi_3 (\omega - \omega_0)^3 + \frac{1}{4!} \phi_4 (\omega - \omega_0)^4 + \dots$$
-                        </small>
+                        <h3>
+                            Spectral Phase
+                            <span class="info-icon" data-tooltip="The spectral phase Φ(ω) is Taylor expanded around the central angular frequency ω₀ (derived from λ₀): Φ(ω) = φ₀ + φ₁(ω - ω₀) + (1/2!)φ₂(ω - ω₀)² + (1/3!)φ₃(ω - ω₀)³ + (1/4!)φ₄(ω - ω₀)⁴ + ...">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                        </h3>
                         <div class="control-group">
                             <label for="phi0">\(\phi_0\) (rad) - Carrier-Envelope Phase (CEP):</label>
                             <input type="number" id="phi0" name="phi0" value="{{ params.phi0 }}" step="any" required>
@@ -163,14 +194,22 @@
                     <div class="parameter-section">
                         <h3>Simulation Grid & Plotting</h3>
                         <div class="control-group">
-                            <label for="N_exponent">Grid Size N (2^Exponent):</label>
+                            <label for="N_exponent">
+                                Grid Size N (2^Exponent):
+                                <span class="info-icon" data-tooltip="FFT points. Use higher values for strongly chirped pulses.">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </label>
                             <input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" max="22" required>
-                            <small>FFT points. Use higher values for strongly chirped pulses.</small>
                         </div>
                          <div class="control-group">
-                            <label for="freq_window_factor">Frequency Window Factor:</label>
+                            <label for="freq_window_factor">
+                                Frequency Window Factor:
+                                <span class="info-icon" data-tooltip="Multiplier for spectral width (Δω) for FFT span. Higher = finer time steps, but smaller time window.">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </label>
                             <input type="number" id="freq_window_factor" name="freq_window_factor" value="{{ params.freq_window_factor }}" step="any" required>
-                            <small>Multiplier for spectral width (\(\Delta\omega\)) for FFT span. Higher = finer time steps, but smaller time window. Might require higher N if time window became too small. </small>
                         </div>
                         <div class="control-group checkbox-group">
                             <label for="automatic_time_range">
@@ -240,6 +279,117 @@
         const manualZoomControlsDiv = document.getElementById('manual-time-zoom-controls');
         const tPlotMinInput = document.getElementById('t_plot_min_manual');
         const tPlotMaxInput = document.getElementById('t_plot_max_manual');
+
+        // Tooltip functionality with dynamic positioning
+        function initTooltips() {
+            const infoIcons = document.querySelectorAll('.info-icon');
+            let activeTooltip = null;
+
+            function getOptimalPosition(icon) {
+                const iconRect = icon.getBoundingClientRect();
+                const tooltipWidth = 250; // Approximate tooltip width
+                const tooltipHeight = 100; // Approximate tooltip height
+                const padding = 20; // Minimum distance from viewport edge
+                
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                // Check available space in each direction
+                const spaceTop = iconRect.top - padding;
+                const spaceBottom = viewportHeight - iconRect.bottom - padding;
+                const spaceLeft = iconRect.left - padding;
+                const spaceRight = viewportWidth - iconRect.right - padding;
+                
+                // Default to top position
+                let position = 'top';
+                
+                // If not enough space on top, try bottom
+                if (spaceTop < tooltipHeight) {
+                    if (spaceBottom >= tooltipHeight) {
+                        position = 'bottom';
+                    } else if (spaceRight >= tooltipWidth) {
+                        position = 'right';
+                    } else if (spaceLeft >= tooltipWidth) {
+                        position = 'left';
+                    } else {
+                        // If no good position, use bottom and let it scroll
+                        position = 'bottom';
+                    }
+                }
+                
+                // For elements on the right edge, prefer left positioning
+                if (iconRect.right > viewportWidth - 100 && spaceLeft >= tooltipWidth) {
+                    position = 'left';
+                }
+                
+                // For elements on the left edge, prefer right positioning
+                if (iconRect.left < 100 && spaceRight >= tooltipWidth) {
+                    position = 'right';
+                }
+                
+                return position;
+            }
+
+            function updateTooltipPosition(icon) {
+                const position = getOptimalPosition(icon);
+                icon.setAttribute('data-position', position);
+            }
+
+            infoIcons.forEach(icon => {
+                icon.addEventListener('mouseenter', () => {
+                    updateTooltipPosition(icon);
+                });
+                
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Update position before showing
+                    updateTooltipPosition(icon);
+                    
+                    // Close any active tooltip
+                    if (activeTooltip && activeTooltip !== icon) {
+                        activeTooltip.classList.remove('active');
+                    }
+                    
+                    // Toggle current tooltip
+                    icon.classList.toggle('active');
+                    activeTooltip = icon.classList.contains('active') ? icon : null;
+                });
+            });
+
+            // Close tooltip when clicking outside
+            document.addEventListener('click', () => {
+                if (activeTooltip) {
+                    activeTooltip.classList.remove('active');
+                    activeTooltip = null;
+                }
+            });
+            
+            // Update positions on window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    infoIcons.forEach(icon => {
+                        if (icon.classList.contains('active')) {
+                            updateTooltipPosition(icon);
+                        }
+                    });
+                }, 100);
+            });
+            
+            // Add dynamic positioning for mobile tooltips
+            if (window.innerWidth <= 480) {
+                infoIcons.forEach(icon => {
+                    icon.addEventListener('click', (e) => {
+                        const rect = icon.getBoundingClientRect();
+                        const topPosition = rect.top + window.scrollY;
+                        icon.style.setProperty('--icon-top', `${topPosition}px`);
+                    });
+                });
+            }
+        }
+
 
         function setPlotPlaceholder(container, message) {
             const img = container.querySelector('img');
@@ -369,8 +519,8 @@
                     const nExponentVal = (result.N !== null && result.N > 0) ? Math.round(Math.log2(result.N)) : '?';
                     let metaHtml = `<strong>Parameters Used/Derived:</strong><br>
                                     Spectrum Source: ${result.spectrum_source || 'N/A'}<br>
-                                    Effective λ₀ = ${formatNum(result.lambda0_nm, 2)} nm,
-                                    Effective Δλ (Intensity FWHM) = ${formatNum(result.bandwidth_nm, 2)} nm,
+                                    λ₀ = ${formatNum(result.lambda0_nm, 2)} nm,
+                                    Δλ (Intensity FWHM) = ${formatNum(result.bandwidth_nm, 2)} nm,
                                     N = 2<sup>${nExponentVal}</sup> = ${result.N || 'N/A'}<br>`;
                     if (result.imported_file_name) {
                         metaHtml += `Imported File: ${result.imported_file_name}<br>`;
@@ -401,6 +551,7 @@
              setDefaultPlaceholders();
              toggleSpectrumParams();
              toggleManualZoomControls();
+             initTooltips();
              if (typeof MathJax !== 'undefined' && typeof MathJax.startup !== 'undefined' && typeof MathJax.startup.promise !== 'undefined') {
                 MathJax.startup.promise.then(() => {
                     MathJax.typesetPromise();
