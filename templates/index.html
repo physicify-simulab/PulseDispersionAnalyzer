@@ -10,6 +10,30 @@
     <link rel="stylesheet" href="/footer.css">
     <link rel="stylesheet" href="/PulseDispersionAnalyzer/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <style>
+        .hidden { display: none; }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        #manual-time-zoom-controls {
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -63,7 +87,8 @@
                         </div>
                         <small>For Gaussian/Sech², this defines the spectral intensity shape \(I(\omega)\) in the angular frequency domain.</small>
 
-                        <div id="analytical-spectrum-params"> <div class="control-group">
+                        <div id="analytical-spectrum-params">
+                            <div class="control-group">
                                 <label for="lambda0_nm">Center Wavelength \(\lambda_0\) (nm):</label>
                                 <input type="number" id="lambda0_nm" name="lambda0_nm" value="{{ params.lambda0_nm }}" step="any">
                             </div>
@@ -136,7 +161,7 @@
                     </div>
 
                     <div class="parameter-section">
-                        <h3>Simulation Grid</h3>
+                        <h3>Simulation Grid & Plotting</h3>
                         <div class="control-group">
                             <label for="N_exponent">Grid Size N (2^Exponent):</label>
                             <input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" max="22" required>
@@ -145,7 +170,23 @@
                          <div class="control-group">
                             <label for="freq_window_factor">Frequency Window Factor:</label>
                             <input type="number" id="freq_window_factor" name="freq_window_factor" value="{{ params.freq_window_factor }}" step="any" required>
-                            <small>Multiplier for spectral width (\(\Delta\omega\)) for FFT span. (Recommended: 1000 or higher for resolving fine spectral features).</small>
+                            <small>Multiplier for spectral width (\(\Delta\omega\)) for FFT span.</small>
+                        </div>
+                        <div class="control-group checkbox-group">
+                            <label for="automatic_time_range">
+                                <input type="checkbox" id="automatic_time_range" name="automatic_time_range" value="true" checked>
+                                Automatic time-domain range
+                            </label>
+                        </div>
+                        <div id="manual-time-zoom-controls" class="hidden">
+                            <div class="control-group">
+                                <label for="t_plot_min_manual">Time Min (fs):</label>
+                                <input type="number" id="t_plot_min_manual" name="t_plot_min_manual" value="-100" step="any">
+                            </div>
+                            <div class="control-group">
+                                <label for="t_plot_max_manual">Time Max (fs):</label>
+                                <input type="number" id="t_plot_max_manual" name="t_plot_max_manual" value="100" step="any">
+                            </div>
                         </div>
                     </div>
 
@@ -178,7 +219,6 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-        // The script block is unchanged and should work correctly
         const form = document.getElementById('params-form');
         const spectralPlotImg = document.getElementById('spectral-plot-img');
         const timePlotImg = document.getElementById('time-plot-img');
@@ -195,6 +235,12 @@
         const lambda0Input = document.getElementById('lambda0_nm');
         const bandwidthInput = document.getElementById('bandwidth_nm');
         const fileInput = document.getElementById('spectrum_file');
+        
+        const autoRangeCheckbox = document.getElementById('automatic_time_range');
+        const manualZoomControlsDiv = document.getElementById('manual-time-zoom-controls');
+        const tPlotMinInput = document.getElementById('t_plot_min_manual');
+        const tPlotMaxInput = document.getElementById('t_plot_max_manual');
+
         function setPlotPlaceholder(container, message) {
             const img = container.querySelector('img');
             const placeholder = container.querySelector('.placeholder-text');
@@ -208,6 +254,7 @@
                 placeholder.style.display = 'block';
             }
         }
+
         function toggleSpectrumParams() {
             const selectedType = document.querySelector('input[name="spectrum_type"]:checked').value;
             const isAnalytical = selectedType === 'gaussian' || selectedType === 'sech2';
@@ -220,8 +267,17 @@
             bandwidthInput.disabled = !isAnalytical;
             fileInput.required = isFile;
         }
+        
+        function toggleManualZoomControls() {
+            const isChecked = autoRangeCheckbox.checked;
+            manualZoomControlsDiv.classList.toggle('hidden', isChecked);
+            tPlotMinInput.disabled = isChecked;
+            tPlotMaxInput.disabled = isChecked;
+        }
+
         spectrumTypeRadios.forEach(radio => radio.addEventListener('change', toggleSpectrumParams));
-        toggleSpectrumParams();
+        autoRangeCheckbox.addEventListener('change', toggleManualZoomControls);
+        
         function clearResultsAndSetLoading() {
             errorMessageDiv.style.display = 'none';
             errorMessageDiv.textContent = '';
@@ -231,17 +287,20 @@
             setPlotPlaceholder(timePlotContainer, 'Calculating... Please Wait');
             setPlotPlaceholder(autocorrPlotContainer, 'Calculating... Please Wait');
         }
+
         function setDefaultPlaceholders() {
             setPlotPlaceholder(spectralPlotContainer, 'Plot will appear here');
             setPlotPlaceholder(timePlotContainer, 'Plot will appear here');
             setPlotPlaceholder(autocorrPlotContainer, 'Plot will appear here');
         }
+
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             clearResultsAndSetLoading();
             loadingIndicator.style.display = 'block';
             const formData = new FormData(form);
             const spectrumType = formData.get('spectrum_type');
+
             if (spectrumType === 'file' && (!fileInput.files || fileInput.files.length === 0)) {
                 errorMessageDiv.textContent = 'Error: Please select a spectrum file.';
                 errorMessageDiv.style.display = 'block';
@@ -266,6 +325,7 @@
                     return;
                  }
             }
+
             try {
                 const response = await fetch('calculate', {
                     method: 'POST',
@@ -280,7 +340,7 @@
                                const maybeJson = JSON.parse(text);
                                errorText = `Error: ${maybeJson.error || errorText}`;
                           } else if (text.length > 0 && text.length < 500) {
-                              const sanitizedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                              const sanitizedText = text.replace(/</g, "<").replace(/>/g, ">");
                               errorText += ` - ${sanitizedText}`;
                           } else {
                               errorText += ` (Unexpected server response format)`;
@@ -336,20 +396,15 @@
                  loadingIndicator.style.display = 'none';
             }
         });
+
         document.addEventListener('DOMContentLoaded', () => {
              setDefaultPlaceholders();
-             // Manually trigger MathJax rendering if needed after dynamic content load.
+             toggleSpectrumParams();
+             toggleManualZoomControls();
              if (typeof MathJax !== 'undefined' && typeof MathJax.startup !== 'undefined' && typeof MathJax.startup.promise !== 'undefined') {
                 MathJax.startup.promise.then(() => {
-                    console.log('MathJax is ready, typesetting...');
                     MathJax.typesetPromise();
                 }).catch(err => console.error('MathJax startup error:', err));
-             } else if (typeof MathJax !== 'undefined' && typeof MathJax.typeset === 'function') {
-                // Fallback for older MathJax or different configuration (less likely for v3)
-                console.log('MathJax typeset function found, calling directly...');
-                MathJax.typeset();
-             } else {
-                console.log('MathJax not fully ready or `typeset` function not found on DOMContentLoaded.');
              }
         });
       </script>

@@ -319,11 +319,11 @@ def calculate_pulse_properties(lambda0_nm, bandwidth_nm, phi0, phi1, phi2, phi3,
     if imported_lambda_nm is not None and imported_amplitude is not None and len(imported_lambda_nm) >= 2:
         sort_indices_disp = np.argsort(imported_lambda_nm)
         imported_lambda_nm_sorted_disp = np.array(imported_lambda_nm)[sort_indices_disp]
-        imported_amplitude_sorted__disp = np.array(imported_amplitude)[sort_indices_disp] # Renamed to avoid conflict
+        imported_amplitude_sorted_disp = np.array(imported_amplitude)[sort_indices_disp] # Renamed to avoid conflict
         
         interp_field_amp_display = np.interp(lambda_plot_nm_axis,
                                              imported_lambda_nm_sorted_disp,
-                                             imported_amplitude_sorted__disp, left=0, right=0)
+                                             imported_amplitude_sorted_disp, left=0, right=0)
         spectrum_intensity_plot = interp_field_amp_display**2
     else: 
         omega_plot_rel_for_analytical_disp = omega_plot_axis_display_abs - omega0_rad_fs
