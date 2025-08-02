@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) The **Pulse Dispersion Analyzer** is a web-based quantitative calculator for analyzing ultrashort laser pulses. It allows users to define spectral properties (analytically or via file import) and observe the impact of spectral phase (Group Delay Dispersion - GDD, Third-Order Dispersion - TOD, etc.) on the temporal pulse shape, duration, and other characteristics.
 
-**Live Demo:** [Access the Analyzer Tool Here](https://physicify-simulab.github.io/PulseDispersionAnalyzer/)
+**Live Demo:** [Access the Analyzer Tool Here](https://visuphy.github.io/PulseDispersionAnalyzer/)
 
 ## Screenshot
 
@@ -62,7 +62,7 @@ To run the Pulse Dispersion Analyzer locally (e.g., for development or to use un
 2.  **Clone the Repository:**
     **Clone the Repository:**
     ```bash
-    git clone https://github.com/physicify-simulab/PulseDispersionAnalyzer.git
+    git clone https://github.com/visuphy/PulseDispersionAnalyzer.git
     cd PulseDispersionAnalyzer
     ```
 
@@ -109,5 +109,5 @@ This project is licensed under the terms of the [MIT License](LICENSE).
 ## Acknowledgements
 
 * **Original Author:** Hussein-Tofaili ([GitHub Profile](https://github.com/Hussein-Tofaili))
-* This project is maintained by [Physicify SimuLab](https://github.com/physicify-simulab).
+* This project is maintained by [VisuPhy](https://github.com/visuphy).
 
