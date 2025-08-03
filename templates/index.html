@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultrafast Pulse Dispersion Analyzer</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/visuphy/visuphy.github.io/refs/heads/main/favicon.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/physicify-simulab/physicify-simulab.github.io/refs/heads/main/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <link rel="stylesheet" href="/header.css">
     <link rel="stylesheet" href="/footer.css">
@@ -29,10 +29,10 @@
     <div class="page-wrapper">
         <div class="main-title-container">
             <!-- HTML structure from your original file [[4]] -->
-            <div class="h1-title-group"><span class="h1-title">Ultrafast Pulse Dispersion Analyzer</span><div class="h1-copyright">© 2025 <a href="https://github.com/visuphy" target="_blank" title="Visit VisuPhy on GitHub">VisuPhy</a></div></div>
+            <div class="h1-title-group"><span class="h1-title">Ultrafast Pulse Dispersion Analyzer</span><div class="h1-copyright">© 2025 <a href="https://github.com/physicify-simulab" target="_blank" title="Visit Physicify SimuLab on GitHub">Physicify SimuLab</a></div></div>
             <div class="h1-info">
                 <div class="info-item"><span class="info-label">About and discussion</span><div class="info-content"><a href="/PulseDispersionAnalyzer/" title="About and Discussion"><i class="fa-solid fa-file-invoice"></i></a></div></div>
-                <div class="info-item"><span class="info-label">Source</span><div class="info-content"><a href="https://github.com/visuphy/PulseDispersionAnalyzer" target="_blank" title="View Source on GitHub"> <i class="fab fa-github"></i></a></div></div>
+                <div class="info-item"><span class="info-label">Source</span><div class="info-content"><a href="https://github.com/physicify-simulab/PulseDispersionAnalyzer" target="_blank" title="View Source on GitHub"> <i class="fab fa-github"></i></a></div></div>
                 <div class="info-item"><span class="info-label">Original Author</span><div class="info-content"><a href="https://github.com/Hussein-Tofaili" target="_blank">Hussein-Tofaili</a></div></div>
                 <div class="info-item"><span class="info-label">Other Contributors</span><div class="info-content"><a href="#" target="_blank">none</a></div></div>
             </div>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="parameter-section">
                         <h3>Simulation Grid & Plotting</h3>
-                        <div class="control-group"><label for="N_exponent">Grid Size N (2^Exponent):<span class="info-icon" data-tooltip="FFT points. Use higher values for strongly chirped pulses."><i class="fas fa-info-circle"></i></span></label><input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" max="22" required></div>
+                        <div class="control-group"><label for="N_exponent">Grid Size N (2^Exponent):<span class="info-icon" data-tooltip="FFT points. Use higher values for strongly chirped pulses."><i class="fas fa-info-circle"></i></span></label><input type="number" id="N_exponent" name="N_exponent" value="{{ params.N_exponent }}" step="1" min="10" {% if not is_development %}max="22"{% endif %} required></div>
                         <div class="control-group"><label for="freq_window_factor">Frequency Window Factor:<span class="info-icon" data-tooltip="Multiplier for spectral width (Δω) for FFT span. Higher = finer time steps, but smaller time window."><i class="fas fa-info-circle"></i></span></label><input type="number" id="freq_window_factor" name="freq_window_factor" value="{{ params.freq_window_factor }}" step="any" required></div>
                         <div class="control-group checkbox-group"><label for="automatic_time_range"><input type="checkbox" id="automatic_time_range" name="automatic_time_range" value="true" checked> Automatic time-domain range</label></div>
                         <div id="manual-time-zoom-controls" class="hidden"><div class="control-group"><label for="t_plot_min_manual">Time Min (fs):</label><input type="number" id="t_plot_min_manual" name="t_plot_min_manual" value="-100" step="any"></div><div class="control-group"><label for="t_plot_max_manual">Time Max (fs):</label><input type="number" id="t_plot_max_manual" name="t_plot_max_manual" value="100" step="any"></div></div>

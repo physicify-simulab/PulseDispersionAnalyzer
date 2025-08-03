@@ -179,7 +179,9 @@ def intro_page():
 
 @app.route('/tool')
 def calculator_page():
-    return render_template('index.html', params=DEFAULT_PARAMS)
+    is_development = os.environ.get('APP_ENV') == 'development'
+    return render_template('index.html', params=DEFAULT_PARAMS, is_development=is_development)
+
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
@@ -304,5 +306,4 @@ def calculate():
         return jsonify({"success": False, "error": "An unexpected server error occurred."}), 500
 
 if __name__ == '__main__':
-    os.environ['APP_ENV'] = 'development'
     app.run(debug=True, host='0.0.0.0', port=5000)
